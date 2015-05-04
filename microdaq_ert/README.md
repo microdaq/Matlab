@@ -1,8 +1,7 @@
 Simulink (Embedded Coder) Target for MicroDAQ Real-Time Measurement System
 =============
 
-Description
-============
+**Summary:**
 
 MicroDAQ (http://www.embedded-solutions.pl) is a Real-Time Measurement
 and Rapid Control Prototyping System.
@@ -17,8 +16,7 @@ generate C code and deploy your algorithms to target hardware.
 
 This package will work with R2013a and newer Matlab releases. 
 
-Installation
-============
+**Installation:**
 
 1) Install latest MicroDAQ firmware from: https://github.com/embedded-solutions/microdaq-firmware/releases
 Download latest MicroDAQ firmware, unpack it, connect MicroDAQ with USB cable, copy OPK package to 'upgrade' directory on MicroDAQ user-disk. In order to flash new firmware open web interface in web browser by entering MicroDAQ IP addres (10.10.1.1 default) and select Install upgrade. After MicroDAQ reboot you can perform next step.
@@ -41,8 +39,7 @@ Avoid using the lcc compiler which ships with MATLAB for Windows. It is known to
 
 You should be good to go.
 
-Key Features
-============
+**What this package already has:**
 
 - Automatic build and download to target using MLink or JTAG (selected by user)
 - Standalone execution on target (driven by SYS/BIOS timer)
@@ -64,8 +61,7 @@ Key Features
         * File operations
         * TCP/IP (client) and UDP Send/Receive
 
-TODO
-============
+**What this package would like to have:**
 
 - Simulink library blocks for:
 
