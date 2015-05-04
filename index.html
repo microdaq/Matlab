@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Matlab by microdaq</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Matlab</h1>
+        <p class="header">MicroDAQ toolbox for Matlab/Simulink (Embedded Coder target)</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/microdaq/Matlab/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/microdaq/Matlab/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/microdaq/Matlab">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/microdaq">microdaq</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a id="simulink-embedded-coder-target-for-microdaq-real-time-measurement-system" class="anchor" href="#simulink-embedded-coder-target-for-microdaq-real-time-measurement-system" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simulink (Embedded Coder) Target for MicroDAQ Real-Time Measurement System</h1>
+
+<h1>
+<a id="description" class="anchor" href="#description" aria-hidden="true"><span class="octicon octicon-link"></span></a>Description</h1>
+
+<p>MicroDAQ (<a href="http://www.embedded-solutions.pl">http://www.embedded-solutions.pl</a>) is a Real-Time Measurement
+and Rapid Control Prototyping System.</p>
+
+<p>Simulink (<a href="http://www.mathworks.com/products/simulink">http://www.mathworks.com/products/simulink</a>) is a leading environment
+for multidomain simulation and Model-Based Design.</p>
+
+<p>Embedded Coder (<a href="http://www.mathworks.com/products/embedded-coder">http://www.mathworks.com/products/embedded-coder</a>) allows you to
+generate C code and deploy your algorithms to target hardware.</p>
+
+<p><strong>Supported Matlab version:</strong></p>
+
+<p>This package will work with R2013a and newer Matlab releases. </p>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>1) Install latest MicroDAQ firmware from: <a href="https://github.com/embedded-solutions/microdaq-firmware/releases">https://github.com/embedded-solutions/microdaq-firmware/releases</a>
+Download latest MicroDAQ firmware, unpack it, connect MicroDAQ with USB cable, copy OPK package to 'upgrade' directory on MicroDAQ user-disk. In order to flash new firmware open web interface in web browser by entering MicroDAQ IP addres (10.10.1.1 default) and select Install upgrade. After MicroDAQ reboot you can perform next step.</p>
+
+<p>2) Windows/Linux: Have Code Composer Studio 5.3 - 5.5 installed (<a href="http://processors.wiki.ti.com/index.php/Download_CCS">http://processors.wiki.ti.com/index.php/Download_CCS</a>). Make sure your installation is full, otherwise you might miss some files (like Device support files for OMAPL137). Code Composer Studio 6 is not supported at the moment.</p>
+
+<p>3) Make sure your toolchain is working (build and download some test project, check connection)
+before you proceed! "docs/MicroDAQ Quick Start Guide.pdf" is a useful document that will guide you through this process.
+This step is not required, but it is strongly advised to get yourself familiar with some basic concepts.</p>
+
+<p>4) Make sure you have a working/supported host compiler (<a href="http://www.mathworks.com/support/compilers/index.html">http://www.mathworks.com/support/compilers/index.html</a>) by running</p>
+
+<pre><code>    mex -setup
+</code></pre>
+
+<p>in MATLAB.
+Avoid using the lcc compiler which ships with MATLAB for Windows. It is known to cause problems.</p>
+
+<p>5) Extract this package somewhere. Make sure there are no spaces/non-ASCII characters in path (just in case).</p>
+
+<p>6) Within MATLAB, 'cd' to the directory containing <em>microdaq_setup.m</em> and run this script.</p>
+
+<p>You should be good to go.</p>
+
+<h1>
+<a id="key-features" class="anchor" href="#key-features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Key Features</h1>
+
+<ul>
+<li>Automatic build and download to target using MLink or JTAG (selected by user)</li>
+<li>Standalone execution on target (driven by SYS/BIOS timer)</li>
+<li>Execution in PIL mode</li>
+<li>External Mode support</li>
+<li><p>PIL mode profiling</p></li>
+<li>
+<p>Simulink library blocks for:</p>
+
+<pre><code>* ADC
+* DAC
+* Quadrature Encoder
+* MEMORY R/W
+* DIO
+* Built-in LEDs
+* Built-in KEYs
+* PRU - Real-time processing unit
+* PWM
+* File operations
+* TCP/IP (client) and UDP Send/Receive
+</code></pre>
+</li>
+</ul>
+
+<h1>
+<a id="todo" class="anchor" href="#todo" aria-hidden="true"><span class="octicon octicon-link"></span></a>TODO</h1>
+
+<ul>
+<li>
+<p>Simulink library blocks for:</p>
+
+<pre><code>* TCP/IP (server) Send/Receive
+* RAW Ethernet
+</code></pre>
+</li>
+<li><p>More documentation</p></li>
+</ul>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
