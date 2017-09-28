@@ -51,6 +51,14 @@ else
         unloadlibrary(mlinklib);
         error('Error starting binary on MicroDAQ: %s',out);
     end
+    % Disconnect
+    result = calllib(mlinklib,'mlink_disconnect',link_fd.Value);
+    if result < 0
+        out = calllib(mlinklib,'mlink_error',result);
+        unloadlibrary(mlinklib);
+        error('Error starting binary on MicroDAQ: %s',out);
+    end
+    
     % Unload MLink library
     unloadlibrary(mlinklib);
 end

@@ -33,7 +33,7 @@ MDAQDAC.IncPaths = {'mdaq'};
 MDAQDAC.SrcPaths = {'mdaq'};
 MDAQDAC.StartFcnSpec = 'DACInit(uint8 p1, uint8 p2[], uint8 p3, uint8 p4, uint8 p5 )';
 MDAQDAC.OutputFcnSpec = 'DACStep(double u1[p3], uint8 p2[], uint8 p3)';
-MDAQDAC.TerminateFcnSpec = 'DACTerminate(single p7[], uint8 p3, uint8 p6 )';
+MDAQDAC.TerminateFcnSpec = 'DACTerminate(double p7[], uint8 p3, uint8 p6 )';
 MDAQDAC.SampleTime = 'parameterized';
 % Support calling from within For-Each subsystem
 MDAQDAC.Options.supportsMultipleExecInstances = true;

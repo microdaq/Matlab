@@ -35,7 +35,7 @@
   rtwoptions(3).prompt         = 'Download method:';
   rtwoptions(3).type           = 'Popup';
   rtwoptions(3).default        = 'MLink';
-  rtwoptions(3).popupstrings    = 'MLink|JTAG';
+  rtwoptions(3).popupstrings    = 'MLink';
   rtwoptions(3).tlcvariable    = 'MICRODAQ_DOWNLOAD_METHOD';
   rtwoptions(3).makevariable   = 'MICRODAQ_DOWNLOAD_METHOD';
   rtwoptions(3).tooltip        = ['Choose the method to download binary to MicroDAQ'];

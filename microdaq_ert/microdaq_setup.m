@@ -14,8 +14,7 @@ if ispref('microdaq')
 	rmpref('microdaq');
 end
 addpref('microdaq','TargetRoot',fix_slash(curpath));
-[CCSRoot, CompilerRoot, XDCRoot, BIOSRoot] = ccs_setup_paths;
-addpref('microdaq','CCSRoot',CCSRoot);
+[CompilerRoot, XDCRoot, BIOSRoot] = ccs_setup_paths;
 addpref('microdaq','CompilerRoot',CompilerRoot);
 addpref('microdaq','XDCRoot',XDCRoot);
 addpref('microdaq','BIOSRoot',BIOSRoot);
@@ -49,7 +48,7 @@ if ispc
 end
 
 % Run XDC Tools on SYS/BIOS configuration file
-cd('sysbios');
+cd('sysbios/cpu0');
 % Remove old SYS/BIOS, if existing
 if isdir(fullfile(pwd,'configPkg'))
     rmdir('configPkg','s');
@@ -57,6 +56,7 @@ end
 if isdir(fullfile(pwd,'src'))
     rmdir('src','s');
 end
+CCSRoot='';
 syscmd = [XDCRoot,'/xs --xdcpath="',BIOSRoot,'/packages;',CCSRoot,...
 '/ccs_base;" xdc.tools.configuro -o configPkg -t ti.targets.elf.C674 -p ti.platforms.evmOMAPL137 -r release -c "',...
 CompilerRoot,'" --compileOptions "-g --optimize_with_debug" ','sysbios.cfg'];
@@ -79,6 +79,39 @@ end
 
 cd(curpath);
 
+% Run XDC Tools on SYS/BIOS configuration file
+cd('sysbios/cpu1');
+% Remove old SYS/BIOS, if existing
+if isdir(fullfile(pwd,'configPkg'))
+    rmdir('configPkg','s');
+end
+if isdir(fullfile(pwd,'src'))
+    rmdir('src','s');
+end
+
+syscmd = [XDCRoot,'/xs --xdcpath="',BIOSRoot,'/packages;',CCSRoot,...
+'/ccs_base;" xdc.tools.configuro -o configPkg -t ti.targets.elf.C674 -p ti.platforms.evmOMAPL137 -r release -c "',...
+CompilerRoot,'" --compileOptions "-g --optimize_with_debug" ','sysbios.cfg'];
+system(syscmd);
+
+% Append extra linker section to main linker script 
+extra_linker_file_fd = fopen('sysbios_linker.cmd', 'r');
+if extra_linker_file_fd > -1
+    cd('configPkg'); 
+    linker_file_fd = fopen('linker.cmd', 'a');
+    if linker_file_fd > -1
+        tmp = fread(extra_linker_file_fd, Inf, '*uchar');
+        fwrite(linker_file_fd, tmp, 'uchar');
+        fclose(extra_linker_file_fd);
+        fclose(linker_file_fd);   
+    else
+        fclose(extra_linker_file_fd);
+    end
+end
+
+cd(curpath);
+
+
 % Generate help
 %cd('../help/source');
 %genhelp;
@@ -91,12 +124,11 @@ disp('Explore <a href="matlab:cd([getpref(''microdaq'',''TargetRoot''),''/../dem
 cd([getpref('microdaq','TargetRoot'),'/../demos']);
 end
 
-function [CCSRoot, CompilerRoot, XDCRoot, BIOSRoot] = ccs_setup_paths()
+function [CompilerRoot, XDCRoot, BIOSRoot] = ccs_setup_paths()
 % TODO: make it foolproof
-CCSRoot = fix_slash(uigetdir(matlabroot,'CCS root directory: (the one with ccs_base, tools ...)'));
-CompilerRoot = fix_slash(uigetdir(CCSRoot,'CCS Compiler root directory: (tools/compiler/c6000_7.X.X)'));
-XDCRoot = fix_slash(uigetdir(fileparts(CCSRoot),'XDC Tools root directory: (xdctools_X_XX_XX_XX)'));
-BIOSRoot = fix_slash(uigetdir(fileparts(CCSRoot),'SYS/BIOS root directory: (bios_6_XX_XX_XX)'));
+CompilerRoot = fix_slash(uigetdir(matlabroot,'Compiler root directory: (tools/compiler/c6000_7.X.X)'));
+XDCRoot = fix_slash(uigetdir(fileparts(CompilerRoot),'XDC Tools root directory: (xdctools_X_XX_XX_XX)'));
+BIOSRoot = fix_slash(uigetdir(fileparts(CompilerRoot),'SYS/BIOS root directory: (bios_6_XX_XX_XX)'));
 end
 
 function path = fix_slash(path0)
