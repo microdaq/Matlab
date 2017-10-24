@@ -7,30 +7,26 @@ if ispc
 else
     mlinklib = 'libmlink64';
 end
+
 % Load MLink library
-loadlibrary([TargetRoot,'/MLink/',mlinklib],[TargetRoot,'/MLink/MLink.h']);
-%libfunctionsview mlinklib
-% Pointer to link fd
-link_fd = libpointer('int32Ptr',0);
-% Connect to MicroDAQ
-TargetIP = getpref('microdaq','TargetIP');
-disp('### Connecting to MicroDAQ...');
-result = calllib(mlinklib,'mlink_connect',TargetIP,4343,link_fd);
-if result < 0
-    out = calllib(mlinklib,'mlink_error',result);
-    unloadlibrary(mlinklib);
-    error('Error connecting to MicroDAQ: %s',out);
+TargetRoot = getpref('microdaq','TargetRoot');
+if ~libisloaded(mlinklib)
+    loadlibrary([TargetRoot,'/MLink/',mlinklib],[TargetRoot,'/MLink/MLink.h']);
 end
+    
+result = mdaqOpen();
+if result < 0
+    error(calllib(mlinklib,'mlink_error',result));
+end
+link_fd = libpointer('int32Ptr',result);
 
 % Upload DSP binary to MicroDAQ
 if upload == 1
     result = calllib(mlinklib, 'mlink_dsp_upload', link_fd);
     if result < 0
         out = calllib(mlinklib,'mlink_error',result);
-        unloadlibrary(mlinklib);   
         error('Error during uploading DSP firmware: %s',out);
     end
-    unloadlibrary(mlinklib);
     disp('### Uploading DSP application to MicroDAQ...');
     msgbox('DSP application upload complite!','Success');
 else
@@ -40,7 +36,6 @@ else
     result = calllib(mlinklib,'mlink_dsp_load',link_fd.Value,outfile,'');
     if result < 0
         out = calllib(mlinklib,'mlink_error',result);
-        unloadlibrary(mlinklib);
         error('Error loading binary to MicroDAQ: %s',out);
     end
     % Start DSP binary on MicroDAQ
@@ -48,17 +43,8 @@ else
     result = calllib(mlinklib,'mlink_dsp_start',link_fd.Value);
     if result < 0
         out = calllib(mlinklib,'mlink_error',result);
-        unloadlibrary(mlinklib);
-        error('Error starting binary on MicroDAQ: %s',out);
-    end
-    % Disconnect
-    result = calllib(mlinklib,'mlink_disconnect',link_fd.Value);
-    if result < 0
-        out = calllib(mlinklib,'mlink_error',result);
-        unloadlibrary(mlinklib);
         error('Error starting binary on MicroDAQ: %s',out);
     end
     
-    % Unload MLink library
-    unloadlibrary(mlinklib);
+    mdaqClose();
 end
