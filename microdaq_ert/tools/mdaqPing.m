@@ -1,5 +1,5 @@
 % This function test if MicroDAQ is connected  
-function mdaq_con_test()
+function mdaqPing()
 
 % MLink library name
 if ispc
@@ -12,49 +12,40 @@ end
 
 % Load MLink library
 TargetRoot = getpref('microdaq','TargetRoot');
-loadlibrary([TargetRoot,'/MLink/',mlinklib],[TargetRoot,'/MLink/MLink.h']);
+    if ~libisloaded(mlinklib)
+        loadlibrary([TargetRoot,'/MLink/',mlinklib],[TargetRoot,'/MLink/MLink.h']);
+    end
 
 %libfunctionsview mlinklib
 % Pointer to link fd
-link_fd = libpointer('int32Ptr',0);
 hwid = libpointer('int32Ptr',zeros(1,5));
 % Connect to MicroDAQ
 TargetIP = getpref('microdaq','TargetIP');
-fprintf('Connecting to MicroDAQ......'); 
-result = calllib(mlinklib,'mlink_connect',TargetIP,4343,link_fd);
-if result < 0
-    out = calllib(mlinklib,'mlink_error',result);
-    unloadlibrary(mlinklib);
-    
+fprintf('Connecting to MicroDAQ@%s......',TargetIP); 
+try 
+    link_fd = mdaqOpen();
+catch
     fprintf(' FAILED!\nUnable to connect to MicroDAQ device, check your configuration!\n');
     fprintf('Simulink is configured to connect to MicroDAQ with following settings:\n');
     fprintf('IP address: %s, port %d\n', TargetIP, 4343); 
-    fprintf('If MicroDAQ has different IP address use mdaq_ip_set to set correct address.\n\n'); 
-    error('Error during connecting to MicroDAQ device %s',out);
+    fprintf('If MicroDAQ has different IP address use mdaqSetIP to set correct address.\n\n'); 
+    error('Error during connecting to MicroDAQ device');
 end
 
-result = calllib(mlinklib,'mlink_hwid',link_fd.Value, hwid );
-
+% get MicroDAQ HWID 
+result = calllib(mlinklib,'mlink_hwid',link_fd, hwid );
 if result < 0
     out = calllib(mlinklib,'mlink_error',result);
-    result = calllib(mlinklib,'mlink_disconnect',link_fd.Value );
+    result = calllib(mlinklib,'mlink_disconnect',link_fd);
     if result < 0
         out = calllib(mlinklib,'mlink_error',result);
-        unloadlibrary(mlinklib);
-        error('Error during disconnecting %s',out);
+        error('Error during disconnecting: %s',out);
     end
-    unloadlibrary(mlinklib);
     error('%s',out);
 end
 
 if hwid.Value(1) ~= 2000 && hwid.Value(1) ~= 1100 && hwid.Value(1) ~= 1000 
-    result = calllib(mlinklib,'mlink_disconnect',link_fd.Value );
-    if result < 0
-        out = calllib(mlinklib,'mlink_error',result);
-        unloadlibrary(mlinklib);
-        error('Error during disconnecting %s',out);
-    end
-    unloadlibrary(mlinklib);
+    mdaqClose();
     error('Unknown MicroDAQ device');
 end
 fprintf('SUCCESS\n');
@@ -69,13 +60,7 @@ fileID = fopen(path, 'w+');
 fprintf(fileID,'SYSBIOS_PATH=sysbios/cpu%d/configPkg/linker.cmd', hwid.Value(4));
 fclose(fileID);
 
-result = calllib(mlinklib,'mlink_disconnect',link_fd.Value );
-if result < 0
-    out = calllib(mlinklib,'mlink_error',result);
-    unloadlibrary(mlinklib);
-    error('Error during disconnecting %s',out);
-end
+mdaqClose();
 
-% Unload MLink library
-unloadlibrary(mlinklib);
+ 
 
