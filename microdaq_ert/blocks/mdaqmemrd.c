@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define BLOCK_MEM_BEGIN         (0xc2000000)
+#define BLOCK_MEM_BEGIN         (0xc2800000)
 
 struct mdaq_blk_mem_
 {

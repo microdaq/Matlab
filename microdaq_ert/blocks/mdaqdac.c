@@ -2,65 +2,70 @@
 #include "mdaq_ao.h"
 #endif
 
-#define MDAQ_AOUT_MAX   (16)
+#define MAX_AO_CH       (16)
 
-void DACInit( unsigned char converter, unsigned char *channels, 
-        unsigned char channel_count, unsigned char mode, 
-        unsigned char update_mode_tirg )
+#define CH_COUNT_INDEX  (0)
+#define CHANNELS_INDEX  (1)
+
+#define NOT_USE_INIT_TERM   (0)
+#define USE_INIT        (1)
+#define USE_TERM        (2)
+#define USE_INIT_TERM   (3)
+
+
+void DACInit(unsigned char *ch, unsigned char ch_count, float *range, double *init, unsigned char *use_term_init)
 {
 #if (!defined MATLAB_MEX_FILE) && (!defined MDL_REF_SIM_TGT)
-	int i; 
-	uint8_t range[MDAQ_AOUT_MAX];
-	for(i = 0; i < channel_count; i++)
-		range[i] = mode; 
-	
-    mdaq_ao_init(1, AO_SYNC);
-	mdaq_ao_ch_config(channels, range, channel_count);
-#endif
 
+    int i, k;
+    uint8_t tmp_ch[MAX_AO_CH];
+    double tmp_init_value[MAX_AO_CH];
+
+    memset((void *)tmp_ch, 0x0, MAX_AO_CH);
+    memset((void *)tmp_init_value, 0x0, sizeof(tmp_init_value));
+
+    /* init DAC converter */
+    mdaq_ao_init(AO_SYNC);
+
+    /* set DAC ranges */
+    mdaq_ao_ch_config(ch, range, ch_count);
+
+    k = 0;
+    for(i = 0; i < ch_count; i++)
+    {
+        if (use_term_init[i] == USE_INIT ||
+            use_term_init[i] == USE_INIT_TERM)
+        {
+            tmp_ch[k] = ch[i];
+            tmp_init_value[k] = init[i];
+            k++;
+        }
+    }
+
+    if (k > 0)
+        mdaq_ao_write(tmp_ch, k, tmp_init_value);
+#endif
 }
 
-void DACStep(double *dac_data, unsigned char *channels, 
-        unsigned char channel_count)
+void DACStep(unsigned char *ch, unsigned char ch_count, double *data)
 {
 #if (!defined MATLAB_MEX_FILE) && (!defined MDL_REF_SIM_TGT)
-    if ( channel_count > MDAQ_AOUT_MAX)
+
+    if ( ch_count > MAX_AO_CH)
         return; 
 
-    mdaq_ao_write(channels, channel_count, dac_data);
+	mdaq_ao_write(ch, ch_count, data);
 #endif
 }
 
-void DACTerminate(double *dac_data_term, unsigned char channel_count, 
-        unsigned short term_all_ch)
+void DACTerminate(unsigned char *ch, unsigned char ch_count, double *term, unsigned char *use_term_init)
 {
 #if (!defined MATLAB_MEX_FILE) && (!defined MDL_REF_SIM_TGT)
-    int count, i; 
-    double term_voltage[MDAQ_AOUT_MAX];
-    unsigned char ch_config[MDAQ_AOUT_MAX]; 
-
-    for(i = 0; i < channel_count; i++)
-    {
-	term_voltage[i] = 0.0; 
-	ch_config[i] = i + 1; 
-
-    }
-    if ( term_all_ch )
-    {
-        if ( dac_data_term[0] != 0 )
-        {
-            for(count = 0; count < MDAQ_AOUT_MAX; count++ ) 
-            {
-                term_voltage[count] = dac_data_term[0]; 
-            }
-        }
-        mdaq_ao_write(ch_config, sizeof(ch_config), term_voltage);
-    }
-    else
-    {
-        mdaq_ao_write(ch_config, channel_count, dac_data_term);
-    }
-    return; 
+    int i;
+    for(i = 0; i < ch_count; i++)
+    if (use_term_init[i] == USE_TERM ||
+        use_term_init[i] == USE_INIT_TERM)
+        mdaq_ao_write(&ch[i], 1, &term[i]);
 #endif
 }
 

@@ -12,14 +12,17 @@ MDAQLED.OutputFcnSpec = 'mdaqled_set(uint32 p1, uint8 u1)';
 MDAQLED.Options.supportsMultipleExecInstances = true;
 
 %% ADC
+clear MDAQADC
 MDAQADC = legacy_code('initialize');
 MDAQADC.SFunctionName = 'sfun_MDAQADC';
 MDAQADC.HeaderFiles = {'mdaqadc.h','mdaq_ai.h'};
 MDAQADC.SourceFiles = {'mdaqadc.c'};
 MDAQADC.IncPaths = {'mdaq'};
 MDAQADC.SrcPaths = {'mdaq'};
-MDAQADC.StartFcnSpec = 'ADCInit(uint8 p1, uint8 p2[], uint8 p3, uint8 p4, uint8 p5, uint8 p6)';
-MDAQADC.OutputFcnSpec = 'ADCStep(uint16 y1[p3], double y2[p3], uint8 p2[], uint8 p3)';
+%void ADCInit(unsigned char *ch, unsigned char ch_count, float *range, unsigned int *mode);
+%void ADCStep(unsigned char *ch, unsigned char ch_count, unsigned int oversampling, double *value);
+MDAQADC.StartFcnSpec =      'ADCInit(uint8 p1[], uint8 p2, single p3[], uint8 p4[])';
+MDAQADC.OutputFcnSpec = 'ADCStep(uint8 p1[], uint8 p2, uint32 p5, double y1[p2])';
 MDAQADC.SampleTime = 'parameterized';
 % Support calling from within For-Each subsystem
 MDAQADC.Options.supportsMultipleExecInstances = true;
@@ -31,9 +34,12 @@ MDAQDAC.HeaderFiles = {'mdaqdac.h','mdaq_ao.h'};
 MDAQDAC.SourceFiles = {'mdaqdac.c'};
 MDAQDAC.IncPaths = {'mdaq'};
 MDAQDAC.SrcPaths = {'mdaq'};
-MDAQDAC.StartFcnSpec = 'DACInit(uint8 p1, uint8 p2[], uint8 p3, uint8 p4, uint8 p5 )';
-MDAQDAC.OutputFcnSpec = 'DACStep(double u1[p3], uint8 p2[], uint8 p3)';
-MDAQDAC.TerminateFcnSpec = 'DACTerminate(double p7[], uint8 p3, uint8 p6 )';
+% void DACInit(unsigned char *ch, unsigned char ch_count, float *range, double *init, unsigned char *use_term_init);
+% void DACStep((unsigned char *ch, unsigned char ch_count, double *data);
+% void DACTerminate(unsigned char *ch, unsigned char ch_count, double *term, unsigned char *use_term_init);
+MDAQDAC.StartFcnSpec = 'DACInit(uint8 p1[], uint8 p2, single p3[], double p4[], uint8 p6[])';
+MDAQDAC.OutputFcnSpec = 'DACStep(uint8 p1[], uint8 p2, double u1[p2])';
+MDAQDAC.TerminateFcnSpec = 'DACTerminate(uint8 p1[], uint8 p2, double p5[],  uint8 p6[])';
 MDAQDAC.SampleTime = 'parameterized';
 % Support calling from within For-Each subsystem
 MDAQDAC.Options.supportsMultipleExecInstances = true;
