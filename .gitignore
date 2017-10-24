@@ -1,0 +1,5 @@
+microdaq_ert/microdaq/sysbios.mk
+microdaq_ert/microdaq/sysbios/cpu0/configPkg/*
+microdaq_ert/microdaq/sysbios/cpu0/src/*
+microdaq_ert/microdaq/sysbios/cpu1/configPkg/*
+microdaq_ert/microdaq/sysbios/cpu1/src/*
