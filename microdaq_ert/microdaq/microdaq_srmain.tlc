@@ -31,6 +31,11 @@
   %assign SAMPLE_TIME = CAST("Unsigned",1000000*%<CompiledModel.FundamentalStepSize>)
   #define STEP_SIZE %<SAMPLE_TIME>
 
+  double get_model_tsamp(void)
+  {
+    return (double)STEP_SIZE / 1000000.0;
+  }
+
   %closefile tmpBuf
  
   %<LibSetSourceFileSection(cFile, "Includes", tmpBuf)>
