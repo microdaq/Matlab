@@ -12,7 +12,7 @@ if (strcmp(get_param(modelName,'SystemTargetFile')  ,'microdaq.tlc') && ...
 
     % check if sysbios.mk exists 
     if ~exist([TargetRoot, '/sysbios.mk'],'file')
-            error('Error: Run mdaq_ping to detect your hardware first');
+            error('Error: Run mdaqPing to detect your hardware first');
     end
 
     % Create the target paths makefile
