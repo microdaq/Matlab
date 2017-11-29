@@ -2,9 +2,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include "mdaq_file.h"
-#endif
+#include <stdint.h>
 
 /* TODO: In case of more than one ToFile block, SH_MALLOC_SIZE should be smaller */
 #define SH_MALLOC_SIZE		(0x80000) //0.5 MB
@@ -35,8 +34,11 @@ static file_data_t file_data[MDAQ_MAX_FILE];
 extern void *sh_malloc(uint32_t size);
 extern double get_model_tsamp(void);
 
+#endif
+
 void ToFileInit(char *file_name, unsigned char mode, unsigned long buf_len,
                  unsigned char ch, unsigned char type )
+
 {
 #if (!defined MATLAB_MEX_FILE) && (!defined MDL_REF_SIM_TGT)
     static int first_time = 1;
