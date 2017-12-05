@@ -3,7 +3,6 @@ function microdaq_download(modelName,makertwObj)
 disp(['### Downloading ', modelName, ' to MicroDAQ...']);
 
 TargetRoot = getpref('microdaq','TargetRoot');
-CCSRoot = getpref('microdaq','CCSRoot');
 
 %MLink is a:
 % default download method and
@@ -31,19 +30,8 @@ else
 end
 
 
-if strcmp(downloadMethod,'"JTAG"')
-    disp('### Using JTAG for download...');
-    if isunix
-        system(['LD_PRELOAD="',CCSRoot,'/ccs_base/DebugServer/bin/libti_xpcom.so" "',CCSRoot,'/ccs_base/scripting/examples/loadti/loadti.sh" -a -r ',...
-            '-c "',TargetRoot,'/MicroDAQ.ccxml" ',...
-            '"',outfile,'" 2> /dev/null']);
-    else
-        system(['"',CCSRoot,'/ccs_base/scripting/examples/loadti/loadti.bat" -a -r ',...
-            '-c "',TargetRoot,'/MicroDAQ.ccxml" ',...
-            '"',outfile,'"']);
-    end
-else
-    disp('### Using MLink for download...');
-    mlink_download(outfile,TargetRoot,0);
-end
+
+disp('### Using MLink for download...');
+mlink_download(outfile,TargetRoot,0);
+
 end

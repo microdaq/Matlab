@@ -74,6 +74,7 @@ MATLAB_ROOT := $(subst \,/,$(MATLAB_ROOT))
 -include ../target_paths.mk
 
 #--------------------- Handwritten tools makefile ------------------------------
+-include $(TargetRoot)/sysbios.mk
 -include $(TargetRoot)/target_tools.mk
 
 #------------------------------ Includes -------------------------------------
@@ -289,6 +290,7 @@ $(MODEL)$(PROGRAM_FILE_EXT): $(OBJS) $(MODELREF_LINK_LIBS) $(SHARED_LIB) $(LIBS)
 	@echo "### BUILD_MODE $(BUILD_MODE)"
 	$(LD) $(LDFLAGS) $(LDFLAGS_EXTMODE) $^ $(LDOUTPUTFLAG)$@
 	@echo "### Generated $@"
+	@$(STRIP) $(MODEL)$(PROGRAM_FILE_EXT)
 endif
 
 %$(OBJ_EXT) : $(subst \,/,$(RELATIVE_PATH_TO_ANCHOR))/%.c

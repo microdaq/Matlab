@@ -1,8 +1,8 @@
 #ifndef _MDAQDAC_H
 #define _MDAQDAC_H
 
-void DACInit( unsigned char converter, unsigned char *channels, unsigned char channel_count, unsigned char update_mode, unsigned char update_mode_tirg );
-void DACStep(double *dac_data, unsigned char *channels, unsigned char channel_count); 
-void DACTerminate(float *dac_data_term, unsigned char channel_count, unsigned short term_all_ch); 
+void DACInit(unsigned char *ch, unsigned char ch_count, float *range, double *init, unsigned char *use_term_init);
+void DACStep(unsigned char *ch, unsigned char ch_count, double *data);
+void DACTerminate(unsigned char *ch, unsigned char ch_count, double *term, unsigned char *use_term_init);
 
 #endif /* _MDAQDAC_H */

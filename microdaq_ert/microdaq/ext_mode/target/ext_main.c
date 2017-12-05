@@ -162,6 +162,11 @@ static boolean_T eventFlags[NUMST];
  * Visible functions *
  *===================*/
 
+double get_model_tsamp(void)
+{
+return (double)STEP_SIZE / 1000000.0;
+}
+
 #if !defined(MULTITASKING) /* single task */
 
 /* Function: rtOneStep ========================================================
