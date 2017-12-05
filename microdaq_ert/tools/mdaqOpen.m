@@ -18,7 +18,7 @@ function result = mdaqOpen()
         end
         
         link_fd = libpointer('int32Ptr',0);
-        TargetIP = char(getpref('microdaq','TargetIP'));
+        TargetIP = getpref('microdaq','TargetIP');
         result = calllib(mlinklib,'mlink_connect',TargetIP,4343,link_fd);
         if result < 0 
             calllib(mlinklib,'mlink_disconnect_all');
