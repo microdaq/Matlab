@@ -28,92 +28,9 @@ end
 addpref('microdaq','TargetIP',tip{1});
 
 % Generate blocks
-disp('<strong>Generating blocks for MicroDAQ</strong>'); 
+% disp('<strong>Generating blocks for MicroDAQ</strong>'); 
 cd('../blocks');
-lct_genblocks;
-cd(curpath);
-
-disp('<strong>Building TI SYS/BIOS real-time operating system for MicroDAQ</strong>'); 
-% Fixes errors related to java on some systems
-if ispc
-    xdcjava = fullfile(getpref('microdaq','XDCRoot'),'jre','bin');
-    if isdir(xdcjava)
-        setenv('PATH',[getenv('PATH'),';',xdcjava]);
-    else
-        % Recent XDCTools don't ship Java. Instead, it relies on
-        % XDCTOOLS_JAVA_HOME environment variable
-        [status, out] = system('java -version');
-        if (status == 0)
-            javaver = regexp(out,'(?<=").*(?=")','match','once');
-            setenv('XDCTOOLS_JAVA_HOME',['C:\Program Files (x86)\Java\jre',javaver]);
-        else
-            error('Unable to find Java installation required for XDCTools. Make sure you have 32-bit Java installed!');
-        end
-    end
-end
-
-% Run XDC Tools on SYS/BIOS configuration file
-cd('sysbios/cpu0');
-% Remove old SYS/BIOS, if existing
-if isdir(fullfile(pwd,'configPkg'))
-    rmdir('configPkg','s');
-end
-if isdir(fullfile(pwd,'src'))
-    rmdir('src','s');
-end
-CCSRoot='';
-syscmd = [XDCRoot,'/xs --xdcpath="',BIOSRoot,'/packages;',CCSRoot,...
-'/ccs_base;" xdc.tools.configuro -o configPkg -t ti.targets.elf.C674 -p ti.platforms.evmOMAPL137 -r release -c "',...
-CompilerRoot,'" --compileOptions "-g --optimize_with_debug" ','sysbios.cfg'];
-system(syscmd);
-
-% Append extra linker section to main linker script 
-extra_linker_file_fd = fopen('sysbios_linker.cmd', 'r');
-if extra_linker_file_fd > -1
-    cd('configPkg'); 
-    linker_file_fd = fopen('linker.cmd', 'a');
-    if linker_file_fd > -1
-        tmp = fread(extra_linker_file_fd, Inf, '*uchar');
-        fwrite(linker_file_fd, tmp, 'uchar');
-        fclose(extra_linker_file_fd);
-        fclose(linker_file_fd);   
-    else
-        fclose(extra_linker_file_fd);
-    end
-end
-
-cd(curpath);
-
-% Run XDC Tools on SYS/BIOS configuration file
-cd('sysbios/cpu1');
-% Remove old SYS/BIOS, if existing
-if isdir(fullfile(pwd,'configPkg'))
-    rmdir('configPkg','s');
-end
-if isdir(fullfile(pwd,'src'))
-    rmdir('src','s');
-end
-
-syscmd = [XDCRoot,'/xs --xdcpath="',BIOSRoot,'/packages;',CCSRoot,...
-'/ccs_base;" xdc.tools.configuro -o configPkg -t ti.targets.elf.C674 -p ti.platforms.evmOMAPL137 -r release -c "',...
-CompilerRoot,'" --compileOptions "-g --optimize_with_debug" ','sysbios.cfg'];
-system(syscmd);
-
-% Append extra linker section to main linker script 
-extra_linker_file_fd = fopen('sysbios_linker.cmd', 'r');
-if extra_linker_file_fd > -1
-    cd('configPkg'); 
-    linker_file_fd = fopen('linker.cmd', 'a');
-    if linker_file_fd > -1
-        tmp = fread(extra_linker_file_fd, Inf, '*uchar');
-        fwrite(linker_file_fd, tmp, 'uchar');
-        fclose(extra_linker_file_fd);
-        fclose(linker_file_fd);   
-    else
-        fclose(extra_linker_file_fd);
-    end
-end
-
+% lct_genblocks;
 cd(curpath);
 
 % Generate help
@@ -121,7 +38,7 @@ cd(curpath);
 %genhelp;
 %cd(curpath);
 
-sl_refresh_customizations;
+% sl_refresh_customizations;
 rehash toolbox;
 disp('<strong>MicroDAQ Target setup is complete!</strong>');
 disp('Explore <a href="matlab:cd([getpref(''microdaq'',''TargetRoot''),''/../demos''])">demos</a> directory and access <a href="matlab:doc -classic">documentation</a>');
