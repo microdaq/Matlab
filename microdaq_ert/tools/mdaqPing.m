@@ -52,10 +52,9 @@ fprintf('SUCCESS\n');
 
 % create file for proper sysbios binary selection
 TargetRoot = getpref('microdaq','TargetRoot');
-path = [TargetRoot,  '\sysbios.mk'];
-if ispc
-	path(path=='\')='/';
-end
+path = [TargetRoot,  '/sysbios.mk'];
+path(path=='\')='/';
+
 fileID = fopen(path, 'w+');
 fprintf(fileID,'SYSBIOS_PATH=sysbios/cpu%d/configPkg/linker.cmd', hwid.Value(4));
 fclose(fileID);
